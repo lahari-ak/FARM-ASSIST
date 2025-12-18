@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmAssist - AI Farmer Support System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* All the previous CSS remains unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2e7d32;
+            --secondary: #7cb342;
+            --accent: #ffa000;
+            --light: #f1f8e9;
+            --dark: #1b5e20;
+            --text: #212121;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Language selector in navigation */
+        .language-selector-nav select {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .language-selector-nav select option {
+            background: var(--primary);
+            color: white;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            background: #ff8f00;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 10px auto;
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .query-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-group textarea,
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .language-selector span {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .voice-input {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .voice-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .voice-btn.listening {
+            background: #f44336;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .weather-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .weather-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .weather-card i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .schemes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .scheme {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .scheme:hover {
+            transform: translateY(-5px);
+        }
+
+        .scheme-img {
+            height: 160px;
+            background-color: #7cb342;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scheme-content {
+            padding: 1.5rem;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-info {
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .contact-form {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 1000;
+        }
+
+        .offline-indicator.online {
+            background: #4caf50;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 1000;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                padding: 1rem;
+                box-shadow: var(--shadow);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            /* For mobile view */
+            .language-selector-nav {
+                margin: 0.5rem 0;
+            }
+            
+            .language-selector-nav select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+                <span data-lang-key="site-title">FarmAssist</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active" data-section="home" data-lang-key="home">Home</a></li>
+                <li><a href="#voice-text" class="nav-link" data-section="voice-text" data-lang-key="voice-text">Voice/Text Query</a></li>
+                <li><a href="#image" class="nav-link" data-section="image" data-lang-key="image">Image Query</a></li>
+                <li><a href="#weather" class="nav-link" data-section="weather" data-lang-key="weather">Weather & Location</a></li>
+                <li><a href="#schemes" class="nav-link" data-section="schemes" data-lang-key="schemes">Government Schemes</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact" data-lang-key="contact">Contact</a></li>
+                <!-- Add language selector -->
+                <li>
+                    <div class="language-selector-nav">
+                        <select id="language-selector">
+                            <option value="english">English</option>
+                            <option value="hindi">Hindi</option>
+                            <option value="telugu">Telugu</option>
+                            <option value="tamil">Tamil</option>
+                            <option value="malayalam">Malayalam</option>
+                            <option value="marathi">Marathi</option>
+                            <option value="bengali">Bengali</option>
+                            <option value="punjabi">Punjabi</option>
+                            <option value="bihari">Bihari</option>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> <span data-lang-key="offline-message">You are currently offline</span>
+    </div>
+    <div class="notification" id="notification">
+        <span id="notification-text"></span>
+    </div>
+
+    <section id="home" class="active">
+        <div class="hero">
+            <h1 data-lang-key="hero-title">AI-Powered Farmer Support System</h1>
+            <p data-lang-key="hero-subtitle">Get expert advice, weather information, government scheme details, and solutions to your farming problems through AI technology</p>
+            <a href="#voice-text" class="btn nav-link" data-section="voice-text" data-lang-key="get-started">Get Started</a>
+        </div>
+
+        <div class="feature-cards" style="margin-top: 3rem;">
+            <div class="card">
+                <i class="fas fa-microphone"></i>
+                <h3 data-lang-key="voice-text-feature">Voice & Text Query</h3>
+                <p data-lang-key="voice-text-desc">Ask questions in your preferred language and get AI-powered responses</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-camera"></i>
+                <h3 data-lang-key="image-feature">Image Analysis</h3>
+                <p data-lang-key="image-desc">Upload images of crops for disease identification and treatment advice</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-cloud-sun"></i>
+                <h3 data-lang-key="weather-feature">Weather Information</h3>
+                <p data-lang-key="weather-desc">Get accurate weather forecasts and farming recommendations</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="voice-text">
+        <h2 class="section-title" data-lang-key="voice-text-title">Voice & Text Query</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 2rem;" data-lang-key="voice-text-subtitle">Ask any farming-related question and get AI-powered advice in your language</p>
+        
+        <div class="query-container">
+            <div class="language-selector">
+                <span data-lang-key="select-language">Select Language:</span>
+                <select id="language-select">
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="telugu">Telugu</option>
+                    <option value="tamil">Tamil</option>
+                    <option value="malayalam">Malayalam</option>
+                    <option value="marathi">Marathi</option>
+                    <option value="bengali">Bengali</option>
+                    <option value="punjabi">Punjabi</option>
+                    <option value="bihari">Bihari</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="query" data-lang-key="type-question">Type your question:</label>
+                <textarea id="query" rows="4" data-lang-placeholder="question-placeholder" placeholder="E.g., How to treat brown spots on rice leaves?"></textarea>
+            </div>
+            
+            <div class="voice-input">
+                <button class="btn" id="submit-query" data-lang-value="submit-question">Submit Question</button>
+                <button class="voice-btn" id="voice-btn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+            
+            <div class="response" style="margin-top: 2rem;">
+                <h3 data-lang-key="ai-response">AI Response:</h3>
+                <div id="ai-response" style="background: #f5f5f5; padding: 1rem; border-radius: 5px; min-height: 100px; margin-top: 1rem;" data-lang-key="response-placeholder">
+                    Response will appear here...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="image">
+        <h2 class="section-title" data-lang-key="image-title">Image Query</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 2rem;" data-lang-key="image-subtitle">Upload an image of your crop or soil for analysis</p>
+        
+        <div class="query-container">
+            <div class="input-group">
+                <label for="image-upload" data-lang-key="upload-image">Upload image:</label>
+                <input type="file" id="image-upload" accept="image/*">
+            </div>
+            
+            <div style="text-align: center; margin: 1.5rem 0;">
+                <img id="preview-image" src="#" alt="Preview" style="max-width: 100%; max-height: 300px; display: none; border-radius: 8px; margin: 0 auto;">
+            </div>
+            
+            <button class="btn" id="analyze-image" style="display: block; margin: 0 auto;" data-lang-value="analyze-image">Analyze Image</button>
+            
+            <div class="response" style="margin-top: 2rem;">
+                <h3 data-lang-key="analysis-result">Analysis Result:</h3>
+                <div id="image-analysis-result" style="background: #f5f5f5; padding: 1rem; border-radius: 5px; min-height: 100px; margin-top: 1rem;" data-lang-key="analysis-placeholder">
+                    Analysis results will appear here...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="weather">
+        <h2 class="section-title" data-lang-key="weather-title">Weather & Location</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 2rem;" data-lang-key="weather-subtitle">Get real-time weather information and advisory for your location</p>
+        
+        <div class="input-group" style="max-width: 500px; margin: 0 auto 2rem;">
+            <label for="location" data-lang-key="enter-location">Enter your location:</label>
+            <input type="text" id="location" data-lang-placeholder="location-placeholder" placeholder="E.g., Chennai, Tamil Nadu">
+        </div>
+        
+        <div class="weather-cards">
+            <div class="weather-card">
+                <i class="fas fa-cloud-sun"></i>
+                <h3 data-lang-key="current-weather">Current Weather</h3>
+                <p data-lang-key="temperature">Temperature: <span id="current-temp">28</span>°C</p>
+                <p data-lang-key="humidity">Humidity: <span id="current-humidity">65</span>%</p>
+                <p data-lang-key="conditions">Conditions: <span id="current-conditions">Partly Cloudy</span></p>
+            </div>
+            
+            <div class="weather-card">
+                <i class="fas fa-cloud-rain"></i>
+                <h3 data-lang-key="rain-forecast">Rain Forecast</h3>
+                <p data-lang-key="next-24h">Next 24h: <span id="rain-chance">40</span>% <span data-lang-key="chance">chance</span></p>
+                <p data-lang-key="expected">Expected: <span id="rain-amount">5</span>mm</p>
+                <p data-lang-key="irrigation-time">Best time for irrigation: <span id="irrigation-time">Tomorrow</span></p>
+            </div>
+            
+            <div class="weather-card">
+                <i class="fas fa-temperature-high"></i>
+                <h3 data-lang-key="advisory">Advisory</h3>
+                <p id="advisory-text">Good day for fertilizer application. Watch for pests in current conditions. Harvesting recommended in 3 days.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn" id="get-weather" data-lang-value="get-weather">Get Weather Information</button>
+        </div>
+    </section>
+
+    <section id="schemes">
+        <h2 class="section-title" data-lang-key="schemes-title">Government Schemes</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 2rem;" data-lang-key="schemes-subtitle">Information about available government agricultural schemes</p>
+        
+        <div class="schemes-container">
+            <div class="scheme">
+                <div class="scheme-img">
+                    <i class="fas fa-tractor" style="font-size: 4rem; color: white;"></i>
+                </div>
+                <div class="scheme-content">
+                    <h3 data-lang-key="pm-kisan">PM-KISAN Scheme</h3>
+                    <p data-lang-key="pm-kisan-desc">Income support of ₹6,000 per year to all farmer families across the country</p>
+                    <a href="https://pmkisan.gov.in" target="_blank" class="btn" style="margin-top: 1rem;" data-lang-key="learn-more">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="scheme">
+                <div class="scheme-img" style="background-color: #2e7d32;">
+                    <i class="fas fa-seedling" style="font-size: 4rem; color: white;"></i>
+                </div>
+                <div class="scheme-content">
+                    <h3 data-lang-key="nmsa">National Mission on Sustainable Agriculture</h3>
+                    <p data-lang-key="nmsa-desc">Promoting sustainable agriculture practices through various measures</p>
+                    <a href="https://nmsa.dac.gov.in" target="_blank" class="btn" style="margin-top: 1rem;" data-lang-key="learn-more">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="scheme">
+                <div class="scheme-img" style="background-color: #ffa000;">
+                    <i class="fas fa-hand-holding-usd" style="font-size: 4rem; color: white;"></i>
+                </div>
+                <div class="scheme-content">
+                    <h3 data-lang-key="pmfby">Pradhan Mantri Fasal Bima Yojana</h3>
+                    <p data-lang-key="pmfby-desc">Crop insurance scheme against natural calamities, pests & diseases</p>
+                    <a href="https://pmfby.gov.in" target="_blank" class="btn" style="margin-top: 1rem;" data-lang-key="learn-more">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title" data-lang-key="contact-title">Contact Us</h2>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 2rem;" data-lang-key="contact-subtitle">Get in touch with agricultural experts for support</p>
+        
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3 data-lang-key="contact-info">Contact Information</h3>
+                <p><i class="fas fa-phone"></i> +91 1800-123-4567</p>
+                <p><i class="fas fa-envelope"></i> support@farmassist.gov.in</p>
+                <p><i class="fas fa-map-marker-alt"></i> <span data-lang-key="ministry-address">Ministry of Agriculture, Kerla</span></p>
+                
+                <h3 style="margin-top: 2rem;" data-lang-key="regional-offices">Regional Offices</h3>
+                <p><i class="fas fa-building"></i> Chennai: 044-12345678</p>
+                <p><i class="fas fa-building"></i> Kerla: 033-12345678</p>
+                <p><i class="fas fa-building"></i> Tamilnadu: 022-12345678</p>
+            </div>
+            
+            <div class="contact-form">
+                <h3 data-lang-key="send-message">Send us a Message</h3>
+                <div class="input-group">
+                    <label for="name" data-lang-key="your-name">Your Name:</label>
+                    <input type="text" id="name" data-lang-placeholder="name-placeholder" placeholder="Enter your name">
+                </div>
+                
+                <div class="input-group">
+                    <label for="email" data-lang-key="email-address">Email Address:</label>
+                    <input type="email" id="email" data-lang-placeholder="email-placeholder" placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label for="message" data-lang-key="message">Message:</label>
+                    <textarea id="message" rows="4" data-lang-placeholder="message-placeholder" placeholder="Type your message here"></textarea>
+                </div>
+                
+                <button class="btn" id="send-message" data-lang-value="send-message-btn">Send Message</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p data-lang-key="copyright">&copy; 2025 FarmAssist - AI Based Farmer Query Support and Advisory System</p>
+        <p data-lang-key="footer-desc">Designed to work both online and offline to serve farmers in remote areas</p>
+    </footer>
+
+    <script>
+        // Language translation data
+        const translations = {
+    english: {
+        // Navigation
+        "site-title": "FarmAssist",
+        "home": "Home",
+        "voice-text": "Voice/Text Query",
+        "image": "Image Query",
+        "weather": "Weather & Location",
+        "schemes": "Government Schemes",
+        "contact": "Contact",
+        
+        // Home section
+        "hero-title": "AI-Powered Farmer Support System",
+        "hero-subtitle": "Get expert advice, weather information, government scheme details, and solutions to your farming problems through AI technology",
+        "get-started": "Get Started",
+        "voice-text-feature": "Voice & Text Query",
+        "voice-text-desc": "Ask questions in your preferred language and get AI-powered responses",
+        "image-feature": "Image Analysis",
+        "image-desc": "Upload images of crops for disease identification and treatment advice",
+        "weather-feature": "Weather Information",
+        "weather-desc": "Get accurate weather forecasts and farming recommendations",
+        
+        // Voice/Text Query section
+        "voice-text-title": "Voice & Text Query",
+        "voice-text-subtitle": "Ask any farming-related question and get AI-powered advice in your language",
+        "select-language": "Select Language:",
+        "type-question": "Type your question:",
+        "question-placeholder": "E.g., How to treat brown spots on rice leaves?",
+        "submit-question": "Submit Question",
+        "ai-response": "AI Response:",
+        "response-placeholder": "Response will appear here...",
+        
+        // Image Query section
+        "image-title": "Image Query",
+        "image-subtitle": "Upload an image of your crop or soil for analysis",
+        "upload-image": "Upload image:",
+        "analyze-image": "Analyze Image",
+        "analysis-result": "Analysis Result:",
+        "analysis-placeholder": "Analysis results will appear here...",
+        
+        // Weather section
+        "weather-title": "Weather & Location",
+        "weather-subtitle": "Get real-time weather information and advisory for your location",
+        "enter-location": "Enter your location:",
+        "location-placeholder": "E.g., Chennai, Tamil Nadu",
+        "current-weather": "Current Weather",
+        "temperature": "Temperature:",
+        "humidity": "Humidity:",
+        "conditions": "Conditions:",
+        "rain-forecast": "Rain Forecast",
+        "next-24h": "Next 24h:",
+        "chance": "chance",
+        "expected": "Expected:",
+        "irrigation-time": "Best time for irrigation:",
+        "advisory": "Advisory",
+        "get-weather": "Get Weather Information",
+        
+        // Schemes section
+        "schemes-title": "Government Schemes",
+        "schemes-subtitle": "Information about available government agricultural schemes",
+        "pm-kisan": "PM-KISAN Scheme",
+        "pm-kisan-desc": "Income support of ₹6,000 per year to all farmer families across the country",
+        "learn-more": "Learn More",
+        "nmsa": "National Mission on Sustainable Agriculture",
+        "nmsa-desc": "Promoting sustainable agriculture practices through various measures",
+        "pmfby": "Pradhan Mantri Fasal Bima Yojana",
+        "pmfby-desc": "Crop insurance scheme against natural calamities, pests & diseases",
+        
+        // Contact section
+        "contact-title": "Contact Us",
+        "contact-subtitle": "Get in touch with agricultural experts for support",
+        "contact-info": "Contact Information",
+        "ministry-address": "Ministry of Agriculture, Kerla",
+        "regional-offices": "Regional Offices",
+        "send-message": "Send us a Message",
+        "your-name": "Your Name:",
+        "name-placeholder": "Enter your name",
+        "email-address": "Email Address:",
+        "email-placeholder": "Enter your email",
+        "message": "Message:",
+        "message-placeholder": "Type your message here",
+        "send-message-btn": "Send Message",
+        
+        // Footer
+        "copyright": "© 2025 FarmAssist - AI Based Farmer Query Support and Advisory System",
+        "footer-desc": "Designed to work both online and offline to serve farmers in remote areas",
+        
+        // Offline message
+        "offline-message": "You are currently offline"
+    },
+
+    // Tamil
+        tamil: {
+    // Navigation
+    "site-title": "ஃபார்ம் அசிஸ்ட்",
+    "home": "முகப்பு",
+    "voice-text": "குரல்/உரை கேள்வி",
+    "image": "பட கேள்வி",
+    "weather": "வானிலை & இடம்",
+    "schemes": "அரசுத் திட்டங்கள்",
+    "contact": "தொடர்பு",
+
+    // Home section
+    "hero-title": "ஏஐ அடிப்படையிலான விவசாயி ஆதரவு அமைப்பு",
+    "hero-subtitle": "ஏஐ தொழில்நுட்பத்தின் மூலம் வானிலை, அரசுத் திட்டங்கள் மற்றும் விவசாய சிக்கல்களுக்கு தீர்வுகள்",
+    "get-started": "தொடங்கவும்",
+    "voice-text-feature": "குரல் & உரை கேள்வி",
+    "voice-text-desc": "உங்கள் மொழியில் கேள்வி கேட்டு, ஏஐ பதில் பெறுங்கள்",
+    "image-feature": "பட பகுப்பாய்வு",
+    "image-desc": "பயிர்களின் நோய்களை கண்டறிந்து சிகிச்சை ஆலோசனைகள் பெற படங்களைப் பதிவேற்றவும்",
+    "weather-feature": "வானிலை தகவல்",
+    "weather-desc": "சரியான வானிலை முன்னறிவிப்புகள் மற்றும் பரிந்துரைகள் பெறவும்",
+
+    // Voice/Text Query section
+    "voice-text-title": "குரல் & உரை கேள்வி",
+    "voice-text-subtitle": "விவசாயம் தொடர்பான கேள்விகளை கேட்டு உங்கள் மொழியில் ஆலோசனைகள் பெறுங்கள்",
+    "select-language": "மொழியைத் தேர்ந்தெடுக்கவும்:",
+    "type-question": "உங்கள் கேள்வியைத் தட்டச்சு செய்யவும்:",
+    "question-placeholder": "உதா: நெல் இலைகளில் பழுப்பு புள்ளிகளை எப்படி சிகிச்சை செய்யலாம்?",
+    "submit-question": "கேள்வி சமர்ப்பிக்கவும்",
+    "ai-response": "ஏஐ பதில்:",
+    "response-placeholder": "பதில் இங்கு தோன்றும்...",
+
+    // Image Query section
+    "image-title": "பட கேள்வி",
+    "image-subtitle": "பயிர் அல்லது நிலத்தின் படத்தை பதிவேற்றவும்",
+    "upload-image": "படத்தை பதிவேற்றவும்:",
+    "analyze-image": "படத்தை பகுப்பாய்வு செய்யவும்",
+    "analysis-result": "பகுப்பாய்வு முடிவு:",
+    "analysis-placeholder": "முடிவுகள் இங்கு தோன்றும்...",
+
+    // Weather section
+    "weather-title": "வானிலை & இடம்",
+    "weather-subtitle": "உங்கள் இடத்தின் நேரடி வானிலை தகவல்",
+    "enter-location": "உங்கள் இடத்தை உள்ளிடவும்:",
+    "location-placeholder": "உதா: சென்னை, தமிழ்நாடு",
+    "current-weather": "தற்போதைய வானிலை",
+    "temperature": "வெப்பநிலை:",
+    "humidity": "ஈரப்பதம்:",
+    "conditions": "நிலைமைகள்:",
+    "rain-forecast": "மழை முன்னறிவிப்பு",
+    "next-24h": "அடுத்த 24 மணி:",
+    "chance": "சாத்தியம்",
+    "expected": "எதிர்பார்ப்பு:",
+    "irrigation-time": "நீர்ப்பாசனத்திற்கு சிறந்த நேரம்:",
+    "advisory": "ஆலோசனை",
+    "get-weather": "வானிலை தகவல் பெறவும்",
+
+    // Schemes section
+    "schemes-title": "அரசுத் திட்டங்கள்",
+    "schemes-subtitle": "விவசாயிகளுக்கான அரசுத் திட்ட விவரங்கள்",
+    "pm-kisan": "பிரதான் மந்திரி கிசான் திட்டம்",
+    "pm-kisan-desc": "வருடத்திற்கு ₹6,000 உதவி",
+    "learn-more": "மேலும் அறிய",
+    "nmsa": "நிலைத்த விவசாயம் தேசிய மிஷன்",
+    "nmsa-desc": "நிலைத்த விவசாயம் ஊக்குவிக்கும் திட்டம்",
+    "pmfby": "பிரதான் மந்திரி பயிர் காப்பீட்டு திட்டம்",
+    "pmfby-desc": "இயற்கை பேரிடர்கள், பூச்சிகள் & நோய்களுக்கு பயிர் காப்பீடு",
+
+    // Contact section
+    "contact-title": "எங்களை தொடர்பு கொள்ள",
+    "contact-subtitle": "விவசாய நிபுணர்களை அணுகுங்கள்",
+    "contact-info": "தொடர்பு தகவல்",
+    "ministry-address": "விவசாய அமைச்சகம், கேரளா",
+    "regional-offices": "மண்டல அலுவலகங்கள்",
+    "send-message": "எங்களுக்கு ஒரு செய்தி அனுப்புங்கள்",
+    "your-name": "உங்கள் பெயர்:",
+    "name-placeholder": "உங்கள் பெயரை உள்ளிடவும்",
+    "email-address": "மின்னஞ்சல் முகவரி:",
+    "email-placeholder": "உங்கள் மின்னஞ்சலை உள்ளிடவும்",
+    "message": "செய்தி:",
+    "message-placeholder": "உங்கள் செய்தியை உள்ளிடவும்",
+    "send-message-btn": "செய்தியை அனுப்பவும்",
+
+    // Footer
+    "copyright": "© 2025 ஃபார்ம் அசிஸ்ட் - ஏஐ விவசாயி ஆதரவு மற்றும் ஆலோசனை அமைப்பு",
+    "footer-desc": "தொலைதூர பகுதிகளிலும் செயல்பட உருவாக்கப்பட்டது",
+
+    // Offline message
+    "offline-message": "நீங்கள் தற்போது ஆஃப்லைனில் உள்ளீர்கள்"
+},
+    // Malayalam
+    malayalam: { 
+    // Navigation
+    "site-title": "ഫാം അസിസ്റ്റ്",
+    "home": "ഹോം",
+    "voice-text": "ശബ്ദം/ടെക്സ്റ്റ് ചോദ്യം",
+    "image": "ചിത്ര ചോദ്യം",
+    "weather": "കാലാവസ്ഥ & സ്ഥലം",
+    "schemes": "സർക്കാർ പദ്ധതികൾ",
+    "contact": "ബന്ധപ്പെടുക",
+
+    // Home section
+    "hero-title": "എഐ അടിസ്ഥാനമാക്കിയ കർഷക സഹായ സംവിധാനം",
+    "hero-subtitle": "എഐ സാങ്കേതികവിദ്യ വഴി കാലാവസ്ഥ, സർക്കാർ പദ്ധതികൾ, കൃഷി പ്രശ്നങ്ങൾക്ക് പരിഹാരങ്ങൾ",
+    "get-started": "ആരംഭിക്കുക",
+    "voice-text-feature": "ശബ്ദവും ടെക്സ്റ്റും",
+    "voice-text-desc": "നിങ്ങളുടെ ഭാഷയിൽ ചോദ്യം ചോദിച്ച് എഐ മറുപടി നേടുക",
+    "image-feature": "ചിത്ര വിശകലനം",
+    "image-desc": "വിളകളുടെ രോഗം കണ്ടെത്താനും ചികിത്സാ നിർദേശങ്ങൾക്കുമായി ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
+    "weather-feature": "കാലാവസ്ഥ വിവരങ്ങൾ",
+    "weather-desc": "ശരിയായ കാലാവസ്ഥ പ്രവചനങ്ങളും കൃഷി നിർദേശങ്ങളും നേടുക",
+
+    // Voice/Text Query section
+    "voice-text-title": "ശബ്ദം & ടെക്സ്റ്റ് ചോദ്യം",
+    "voice-text-subtitle": "കൃഷി സംബന്ധമായ ചോദ്യങ്ങൾ ചോദിച്ച് നിങ്ങളുടെ ഭാഷയിൽ മറുപടി നേടുക",
+    "select-language": "ഭാഷ തിരഞ്ഞെടുക്കുക:",
+    "type-question": "നിങ്ങളുടെ ചോദ്യം എഴുതുക:",
+    "question-placeholder": "ഉദാ: നെല്ലിൻ ഇലയിൽ തവിട്ട് പാടുകൾ എങ്ങനെ ചികിത്സിക്കാം?",
+    "submit-question": "ചോദ്യം സമർപ്പിക്കുക",
+    "ai-response": "എഐ മറുപടി:",
+    "response-placeholder": "മറുപടി ഇവിടെ കാണിക്കും...",
+
+    // Image Query section
+    "image-title": "ചിത്ര ചോദ്യം",
+    "image-subtitle": "വിളയുടെയോ മണ്ണിന്റെയോ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
+    "upload-image": "ചിത്രം അപ്‌ലോഡ് ചെയ്യുക:",
+    "analyze-image": "ചിത്രം വിശകലനം ചെയ്യുക",
+    "analysis-result": "വിശകലന ഫലം:",
+    "analysis-placeholder": "ഫലം ഇവിടെ കാണിക്കും...",
+
+    // Weather section
+    "weather-title": "കാലാവസ്ഥ & സ്ഥലം",
+    "weather-subtitle": "നിങ്ങളുടെ സ്ഥലത്തെ തത്സമയ കാലാവസ്ഥ വിവരങ്ങൾ",
+    "enter-location": "നിങ്ങളുടെ സ്ഥലം നൽകുക:",
+    "location-placeholder": "ഉദാ: കൊച്ചി, കേരളം",
+    "current-weather": "നിലവിലെ കാലാവസ്ഥ",
+    "temperature": "താപനില:",
+    "humidity": "ആർദ്രത:",
+    "conditions": "സ്ഥിതികൾ:",
+    "rain-forecast": "മഴ പ്രവചനം",
+    "next-24h": "അടുത്ത 24 മണിക്കൂർ:",
+    "chance": "സാധ്യത",
+    "expected": "പ്രതീക്ഷിക്കുന്നത്:",
+    "irrigation-time": "നനയ്ക്കാനുള്ള മികച്ച സമയം:",
+    "advisory": "ഉപദേശം",
+    "get-weather": "കാലാവസ്ഥ വിവരം നേടുക",
+
+    // Schemes section
+    "schemes-title": "സർക്കാർ പദ്ധതികൾ",
+    "schemes-subtitle": "കർഷകർക്കുള്ള സർക്കാർ പദ്ധതികളുടെ വിവരം",
+    "pm-kisan": "പ്രധാനമന്ത്രി കിസാൻ പദ്ധതി",
+    "pm-kisan-desc": "കർഷകർക്ക് പ്രതിവർഷം ₹6,000 സാമ്പത്തിക സഹായം",
+    "learn-more": "കൂടുതൽ അറിയുക",
+    "nmsa": "സുസ്ഥിര കൃഷി ദേശീയ മിഷൻ",
+    "nmsa-desc": "സുസ്ഥിര കൃഷി പ്രോത്സാഹിപ്പിക്കുന്ന പദ്ധതി",
+    "pmfby": "പ്രധാനമന്ത്രി ഫസൽ ബീമ യോജന",
+    "pmfby-desc": "പ്രകൃതി ദുരന്തങ്ങൾ, കീടങ്ങൾ & രോഗങ്ങൾക്കെതിരായ വിള ഇൻഷുറൻസ്",
+
+    // Contact section
+    "contact-title": "ഞങ്ങളെ ബന്ധപ്പെടുക",
+    "contact-subtitle": "കൃഷി വിദഗ്ധരുമായി ബന്ധപ്പെടുക",
+    "contact-info": "ബന്ധപ്പെടാനുള്ള വിവരം",
+    "ministry-address": "കൃഷി മന്ത്രാലയം, കേരളം",
+    "regional-offices": "പ്രാദേശിക ഓഫീസുകൾ",
+    "send-message": "ഒരു സന്ദേശം അയയ്ക്കുക",
+    "your-name": "നിങ്ങളുടെ പേര്:",
+    "name-placeholder": "നിങ്ങളുടെ പേര് നൽകുക",
+    "email-address": "ഇമെയിൽ വിലാസം:",
+    "email-placeholder": "നിങ്ങളുടെ ഇമെയിൽ നൽകുക",
+    "message": "സന്ദേശം:",
+    "message-placeholder": "നിങ്ങളുടെ സന്ദേശം നൽകുക",
+    "send-message-btn": "സന്ദേശം അയയ്ക്കുക",
+
+    // Footer
+    "copyright": "© 2025 ഫാം അസിസ്റ്റ് - എഐ അടിസ്ഥാനമാക്കിയ കർഷക സഹായവും ഉപദേശവും",
+    "footer-desc": "ദൂരെ പ്രദേശങ്ങളിലെ കർഷകർക്കും സേവനം ലഭ്യമാക്കാൻ രൂപകൽപ്പന ചെയ്തത്",
+
+    // Offline message
+    "offline-message": "നിങ്ങൾ ഇപ്പോൾ ഓഫ്ലൈനിലാണ്"
+},
+    // Marathi
+    marathi: { 
+    // Navigation
+    "site-title": "फार्मअसिस्ट",
+    "home": "मुख्यपृष्ठ",
+    "voice-text": "आवाज/टेक्स्ट प्रश्न",
+    "image": "प्रतिमा प्रश्न",
+    "weather": "हवामान व स्थान",
+    "schemes": "शासकीय योजना",
+    "contact": "संपर्क",
+
+    // Home section
+    "hero-title": "एआय आधारित शेतकरी सहाय्य प्रणाली",
+    "hero-subtitle": "एआय तंत्रज्ञानाच्या मदतीने हवामान, शासकीय योजना व शेतीसंबंधित समस्यांचे निराकरण",
+    "get-started": "सुरू करा",
+    "voice-text-feature": "आवाज व टेक्स्ट प्रश्न",
+    "voice-text-desc": "आपल्या भाषेत प्रश्न विचारा आणि एआय कडून उत्तर मिळवा",
+    "image-feature": "प्रतिमा विश्लेषण",
+    "image-desc": "पिकांचे फोटो अपलोड करून रोग ओळखा व उपचाराचे मार्गदर्शन मिळवा",
+    "weather-feature": "हवामान माहिती",
+    "weather-desc": "अचूक हवामान अंदाज व शेतीसंबंधित शिफारसी मिळवा",
+
+    // Voice/Text Query section
+    "voice-text-title": "आवाज व टेक्स्ट प्रश्न",
+    "voice-text-subtitle": "शेतीसंबंधित कोणताही प्रश्न विचारा आणि आपल्या भाषेत मार्गदर्शन मिळवा",
+    "select-language": "भाषा निवडा:",
+    "type-question": "आपला प्रश्न लिहा:",
+    "question-placeholder": "उदा: भाताच्या पानांवर तपकिरी डाग आल्यास उपचार काय?",
+    "submit-question": "प्रश्न पाठवा",
+    "ai-response": "एआय उत्तर:",
+    "response-placeholder": "उत्तर येथे दिसेल...",
+
+    // Image Query section
+    "image-title": "प्रतिमा प्रश्न",
+    "image-subtitle": "आपल्या पिकाचा किंवा जमिनीचा फोटो अपलोड करा",
+    "upload-image": "फोटो अपलोड करा:",
+    "analyze-image": "प्रतिमा विश्लेषण करा",
+    "analysis-result": "विश्लेषणाचा निकाल:",
+    "analysis-placeholder": "निकाल येथे दिसेल...",
+
+    // Weather section
+    "weather-title": "हवामान व स्थान",
+    "weather-subtitle": "आपल्या ठिकाणचे प्रत्यक्ष हवामान व मार्गदर्शन",
+    "enter-location": "आपले ठिकाण भरा:",
+    "location-placeholder": "उदा: पुणे, महाराष्ट्र",
+    "current-weather": "सध्याचे हवामान",
+    "temperature": "तापमान:",
+    "humidity": "आर्द्रता:",
+    "conditions": "स्थिती:",
+    "rain-forecast": "पावसाचा अंदाज",
+    "next-24h": "पुढील 24 तास:",
+    "chance": "शक्यता",
+    "expected": "अपेक्षित:",
+    "irrigation-time": "पाणी देण्यासाठी सर्वोत्तम वेळ:",
+    "advisory": "मार्गदर्शन",
+    "get-weather": "हवामान माहिती मिळवा",
+
+    // Schemes section
+    "schemes-title": "शासकीय योजना",
+    "schemes-subtitle": "शेतकऱ्यांसाठी उपलब्ध असलेल्या शासकीय योजनांची माहिती",
+    "pm-kisan": "पीएम-किसान योजना",
+    "pm-kisan-desc": "शेतकरी कुटुंबांना प्रतिवर्षी ₹6,000 आर्थिक मदत",
+    "learn-more": "अधिक जाणून घ्या",
+    "nmsa": "राष्ट्रीय शाश्वत शेती अभियान",
+    "nmsa-desc": "शाश्वत शेती पद्धती प्रोत्साहित करणारी योजना",
+    "pmfby": "प्रधानमंत्री फसल विमा योजना",
+    "pmfby-desc": "नैसर्गिक आपत्ती, कीड व रोगांपासून संरक्षणासाठी पीक विमा",
+
+    // Contact section
+    "contact-title": "आमच्याशी संपर्क साधा",
+    "contact-subtitle": "शेती तज्ञांशी संपर्क साधा",
+    "contact-info": "संपर्क माहिती",
+    "ministry-address": "कृषी मंत्रालय, केरळ",
+    "regional-offices": "प्रादेशिक कार्यालये",
+    "send-message": "आम्हाला संदेश पाठवा",
+    "your-name": "आपले नाव:",
+    "name-placeholder": "आपले नाव भरा",
+    "email-address": "ई-मेल पत्ता:",
+    "email-placeholder": "आपला ई-मेल भरा",
+    "message": "संदेश:",
+    "message-placeholder": "आपला संदेश भरा",
+    "send-message-btn": "संदेश पाठवा",
+
+    // Footer
+    "copyright": "© 2025 फार्मअसिस्ट - एआय आधारित शेतकरी सहाय्य व मार्गदर्शन प्रणाली",
+    "footer-desc": "दूरवरच्या भागातील शेतकऱ्यांसाठीही वापरण्यास योग्य",
+
+    // Offline message
+    "offline-message": "आपण सध्या ऑफलाइन आहात"
+},
+ // Bengali
+    bengali: { 
+    // Navigation
+    "site-title": "ফার্মঅ্যাসিস্ট",
+    "home": "হোম",
+    "voice-text": "ভয়েস/টেক্সট প্রশ্ন",
+    "image": "ছবি প্রশ্ন",
+    "weather": "আবহাওয়া ও স্থান",
+    "schemes": "সরকারি প্রকল্প",
+    "contact": "যোগাযোগ",
+
+    // Home section
+    "hero-title": "এআই-চালিত কৃষক সহায়তা ব্যবস্থা",
+    "hero-subtitle": "এআই প্রযুক্তির মাধ্যমে আবহাওয়া, সরকারি প্রকল্প ও কৃষি সমস্যার সমাধান",
+    "get-started": "শুরু করুন",
+    "voice-text-feature": "ভয়েস ও টেক্সট প্রশ্ন",
+    "voice-text-desc": "আপনার ভাষায় প্রশ্ন করুন এবং এআই থেকে উত্তর পান",
+    "image-feature": "ছবি বিশ্লেষণ",
+    "image-desc": "ফসলের ছবি আপলোড করে রোগ শনাক্তকরণ ও চিকিৎসা পরামর্শ পান",
+    "weather-feature": "আবহাওয়ার তথ্য",
+    "weather-desc": "সঠিক আবহাওয়ার পূর্বাভাস ও কৃষি পরামর্শ পান",
+
+    // Voice/Text Query section
+    "voice-text-title": "ভয়েস ও টেক্সট প্রশ্ন",
+    "voice-text-subtitle": "কৃষি সম্পর্কিত যেকোনো প্রশ্ন করুন এবং আপনার ভাষায় উত্তর পান",
+    "select-language": "ভাষা নির্বাচন করুন:",
+    "type-question": "আপনার প্রশ্ন লিখুন:",
+    "question-placeholder": "উদাহরণ: ধানের পাতায় বাদামী দাগ হলে কীভাবে চিকিৎসা করবেন?",
+    "submit-question": "প্রশ্ন পাঠান",
+    "ai-response": "এআই উত্তর:",
+    "response-placeholder": "উত্তর এখানে দেখানো হবে...",
+
+    // Image Query section
+    "image-title": "ছবি প্রশ্ন",
+    "image-subtitle": "আপনার ফসল বা মাটির ছবি আপলোড করুন",
+    "upload-image": "ছবি আপলোড করুন:",
+    "analyze-image": "ছবি বিশ্লেষণ করুন",
+    "analysis-result": "বিশ্লেষণের ফলাফল:",
+    "analysis-placeholder": "ফলাফল এখানে দেখানো হবে...",
+
+    // Weather section
+    "weather-title": "আবহাওয়া ও স্থান",
+    "weather-subtitle": "আপনার এলাকার রিয়েল-টাইম আবহাওয়ার তথ্য",
+    "enter-location": "আপনার এলাকা লিখুন:",
+    "location-placeholder": "উদাহরণ: কলকাতা, পশ্চিমবঙ্গ",
+    "current-weather": "বর্তমান আবহাওয়া",
+    "temperature": "তাপমাত্রা:",
+    "humidity": "আর্দ্রতা:",
+    "conditions": "পরিস্থিতি:",
+    "rain-forecast": "বৃষ্টির পূর্বাভাস",
+    "next-24h": "পরবর্তী 24 ঘণ্টা:",
+    "chance": "সম্ভাবনা",
+    "expected": "প্রত্যাশিত:",
+    "irrigation-time": "সেচ দেওয়ার সেরা সময়:",
+    "advisory": "পরামর্শ",
+    "get-weather": "আবহাওয়ার তথ্য পান",
+
+    // Schemes section
+    "schemes-title": "সরকারি প্রকল্প",
+    "schemes-subtitle": "কৃষকদের জন্য উপলব্ধ সরকারি প্রকল্পের তথ্য",
+    "pm-kisan": "পিএম-কিসান প্রকল্প",
+    "pm-kisan-desc": "কৃষক পরিবারগুলিকে বছরে ₹6,000 আর্থিক সহায়তা",
+    "learn-more": "আরও জানুন",
+    "nmsa": "জাতীয় টেকসই কৃষি মিশন",
+    "nmsa-desc": "টেকসই কৃষি চর্চা প্রচারকারী প্রকল্প",
+    "pmfby": "প্রধানমন্ত্রী ফসল বীমা যোজনা",
+    "pmfby-desc": "প্রাকৃতিক দুর্যোগ, পোকা ও রোগের বিরুদ্ধে ফসল বীমা",
+
+    // Contact section
+    "contact-title": "আমাদের সাথে যোগাযোগ করুন",
+    "contact-subtitle": "কৃষি বিশেষজ্ঞদের সাথে যোগাযোগ করুন",
+    "contact-info": "যোগাযোগের তথ্য",
+    "ministry-address": "কৃষি মন্ত্রণালয়, কেরালা",
+    "regional-offices": "আঞ্চলিক অফিস",
+    "send-message": "আমাদের বার্তা পাঠান",
+    "your-name": "আপনার নাম:",
+    "name-placeholder": "আপনার নাম লিখুন",
+    "email-address": "ইমেল ঠিকানা:",
+    "email-placeholder": "আপনার ইমেল লিখুন",
+    "message": "বার্তা:",
+    "message-placeholder": "আপনার বার্তা লিখুন",
+    "send-message-btn": "বার্তা পাঠান",
+
+    // Footer
+    "copyright": "© 2025 ফার্মঅ্যাসিস্ট - এআই ভিত্তিক কৃষক সহায়তা ও পরামর্শ ব্যবস্থা",
+    "footer-desc": "দূরবর্তী এলাকার কৃষকদের সেবা দেওয়ার জন্য ডিজাইন করা হয়েছে",
+
+    // Offline message
+    "offline-message": "আপনি বর্তমানে অফলাইনে আছেন"
+},
+
+    // Punjabi
+    punjabi: { 
+    // Navigation
+    "site-title": "ਫਾਰਮਅਸਿਸਟ",
+    "home": "ਮੁੱਖ ਪੰਨਾ",
+    "voice-text": "ਆਵਾਜ਼/ਪਾਠ ਪ੍ਰਸ਼ਨ",
+    "image": "ਤਸਵੀਰ ਪ੍ਰਸ਼ਨ",
+    "weather": "ਮੌਸਮ ਅਤੇ ਥਾਂ",
+    "schemes": "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
+    "contact": "ਸੰਪਰਕ",
+
+    // Home section
+    "hero-title": "ਏਆਈ ਅਧਾਰਤ ਕਿਸਾਨ ਸਹਾਇਤਾ ਪ੍ਰਣਾਲੀ",
+    "hero-subtitle": "ਏਆਈ ਤਕਨਾਲੋਜੀ ਰਾਹੀਂ ਮੌਸਮ, ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਅਤੇ ਖੇਤੀ ਸਮੱਸਿਆਵਾਂ ਦੇ ਹੱਲ",
+    "get-started": "ਸ਼ੁਰੂ ਕਰੋ",
+    "voice-text-feature": "ਆਵਾਜ਼ ਅਤੇ ਪਾਠ ਪ੍ਰਸ਼ਨ",
+    "voice-text-desc": "ਆਪਣੀ ਭਾਸ਼ਾ ਵਿੱਚ ਪ੍ਰਸ਼ਨ ਪੁੱਛੋ ਅਤੇ ਏਆਈ ਤੋਂ ਜਵਾਬ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "image-feature": "ਤਸਵੀਰ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "image-desc": "ਫਸਲਾਂ ਦੀਆਂ ਬਿਮਾਰੀਆਂ ਪਛਾਣਣ ਅਤੇ ਇਲਾਜ ਲਈ ਤਸਵੀਰਾਂ ਅਪਲੋਡ ਕਰੋ",
+    "weather-feature": "ਮੌਸਮ ਜਾਣਕਾਰੀ",
+    "weather-desc": "ਸਹੀ ਮੌਸਮ ਪੇਸ਼ਗੋਈਆਂ ਅਤੇ ਖੇਤੀਬਾੜੀ ਸਿਫਾਰਸ਼ਾਂ ਪ੍ਰਾਪਤ ਕਰੋ",
+
+    // Voice/Text Query section
+    "voice-text-title": "ਆਵਾਜ਼ ਅਤੇ ਪਾਠ ਪ੍ਰਸ਼ਨ",
+    "voice-text-subtitle": "ਖੇਤੀਬਾੜੀ ਨਾਲ ਸੰਬੰਧਤ ਪ੍ਰਸ਼ਨ ਪੁੱਛੋ ਅਤੇ ਆਪਣੀ ਭਾਸ਼ਾ ਵਿੱਚ ਸਲਾਹ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "select-language": "ਭਾਸ਼ਾ ਚੁਣੋ:",
+    "type-question": "ਆਪਣਾ ਪ੍ਰਸ਼ਨ ਲਿਖੋ:",
+    "question-placeholder": "ਉਦਾਹਰਨ: ਧਾਨ ਦੇ ਪੱਤਿਆਂ 'ਤੇ ਭੂਰੇ ਦਾਗ ਦਾ ਇਲਾਜ ਕਿਵੇਂ ਕਰੀਏ?",
+    "submit-question": "ਪ੍ਰਸ਼ਨ ਭੇਜੋ",
+    "ai-response": "ਏਆਈ ਜਵਾਬ:",
+    "response-placeholder": "ਜਵਾਬ ਇੱਥੇ ਦਰਸਾਇਆ ਜਾਵੇਗਾ...",
+
+    // Image Query section
+    "image-title": "ਤਸਵੀਰ ਪ੍ਰਸ਼ਨ",
+    "image-subtitle": "ਆਪਣੀ ਫਸਲ ਜਾਂ ਮਿੱਟੀ ਦੀ ਤਸਵੀਰ ਅਪਲੋਡ ਕਰੋ",
+    "upload-image": "ਤਸਵੀਰ ਅਪਲੋਡ ਕਰੋ:",
+    "analyze-image": "ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ",
+    "analysis-result": "ਵਿਸ਼ਲੇਸ਼ਣ ਨਤੀਜਾ:",
+    "analysis-placeholder": "ਨਤੀਜੇ ਇੱਥੇ ਦਰਸਾਏ ਜਾਣਗੇ...",
+
+    // Weather section
+    "weather-title": "ਮੌਸਮ ਅਤੇ ਥਾਂ",
+    "weather-subtitle": "ਆਪਣੇ ਇਲਾਕੇ ਦੀ ਤਾਜ਼ਾ ਮੌਸਮ ਜਾਣਕਾਰੀ",
+    "enter-location": "ਆਪਣਾ ਥਾਂ ਦਰਜ ਕਰੋ:",
+    "location-placeholder": "ਉਦਾਹਰਨ: ਅੰਮ੍ਰਿਤਸਰ, ਪੰਜਾਬ",
+    "current-weather": "ਮੌਜੂਦਾ ਮੌਸਮ",
+    "temperature": "ਤਾਪਮਾਨ:",
+    "humidity": "ਨਮੀ:",
+    "conditions": "ਸਥਿਤੀਆਂ:",
+    "rain-forecast": "ਬਰਸਾਤ ਪੇਸ਼ਗੋਈ",
+    "next-24h": "ਅਗਲੇ 24 ਘੰਟੇ:",
+    "chance": "ਸੰਭਾਵਨਾ",
+    "expected": "ਉਮੀਦ:",
+    "irrigation-time": "ਸਿੰਚਾਈ ਲਈ ਸਭ ਤੋਂ ਵਧੀਆ ਸਮਾਂ:",
+    "advisory": "ਸਲਾਹ",
+    "get-weather": "ਮੌਸਮ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰੋ",
+
+    // Schemes section
+    "schemes-title": "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
+    "schemes-subtitle": "ਕਿਸਾਨਾਂ ਲਈ ਉਪਲਬਧ ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਦੀ ਜਾਣਕਾਰੀ",
+    "pm-kisan": "ਪੀਐਮ-ਕਿਸਾਨ ਯੋਜਨਾ",
+    "pm-kisan-desc": "ਹਰ ਕਿਸਾਨ ਪਰਿਵਾਰ ਨੂੰ ਸਾਲਾਨਾ ₹6,000 ਦੀ ਆਰਥਿਕ ਸਹਾਇਤਾ",
+    "learn-more": "ਹੋਰ ਜਾਣੋ",
+    "nmsa": "ਰਾਸ਼ਟਰੀ ਟਿਕਾਊ ਖੇਤੀ ਮਿਸ਼ਨ",
+    "nmsa-desc": "ਟਿਕਾਊ ਖੇਤੀਬਾੜੀ ਅਭਿਆਸਾਂ ਨੂੰ ਉਤਸ਼ਾਹਿਤ ਕਰਨ ਵਾਲੀ ਯੋਜਨਾ",
+    "pmfby": "ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਫਸਲ ਬੀਮਾ ਯੋਜਨਾ",
+    "pmfby-desc": "ਕੁਦਰਤੀ ਆਫ਼ਤਾਂ, ਕੀੜਿਆਂ ਅਤੇ ਬਿਮਾਰੀਆਂ ਤੋਂ ਫਸਲ ਬੀਮਾ",
+
+    // Contact section
+    "contact-title": "ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+    "contact-subtitle": "ਖੇਤੀਬਾੜੀ ਵਿਸ਼ੇਸ਼ਗਿਆਨਾਂ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+    "contact-info": "ਸੰਪਰਕ ਜਾਣਕਾਰੀ",
+    "ministry-address": "ਖੇਤੀਬਾੜੀ ਮੰਤਰਾਲਾ, ਕੇਰਲ",
+    "regional-offices": "ਖੇਤਰੀ ਦਫ਼ਤਰ",
+    "send-message": "ਸਾਨੂੰ ਸੁਨੇਹਾ ਭੇਜੋ",
+    "your-name": "ਤੁਹਾਡਾ ਨਾਮ:",
+    "name-placeholder": "ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+    "email-address": "ਈਮੇਲ ਪਤਾ:",
+    "email-placeholder": "ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ",
+    "message": "ਸੁਨੇਹਾ:",
+    "message-placeholder": "ਆਪਣਾ ਸੁਨੇਹਾ ਲਿਖੋ",
+    "send-message-btn": "ਸੁਨੇਹਾ ਭੇਜੋ",
+
+    // Footer
+    "copyright": "© 2025 ਫਾਰਮਅਸਿਸਟ - ਏਆਈ ਅਧਾਰਤ ਕਿਸਾਨ ਸਹਾਇਤਾ ਅਤੇ ਸਲਾਹ ਪ੍ਰਣਾਲੀ",
+    "footer-desc": "ਦੂਰ-ਦਰਾਜ਼ ਇਲਾਕਿਆਂ ਦੇ ਕਿਸਾਨਾਂ ਲਈ ਵੀ ਉਪਲਬਧ",
+
+    // Offline message
+    "offline-message": "ਤੁਸੀਂ ਇਸ ਵੇਲੇ ਆਫਲਾਈਨ ਹੋ"
+     },
+
+    // Bihari (Bhojpuri)
+    bihari: { 
+    // Navigation
+    "site-title": "फार्मअसिस्ट",
+    "home": "मुख पन्ना",
+    "voice-text": "आवाज/लिखल सवाल",
+    "image": "फोटू सवाल",
+    "weather": "मौसम आ जगह",
+    "schemes": "सरकारी योजना",
+    "contact": "संपर्क",
+
+    // Home section
+    "hero-title": "एआई से चलावल किसान मदद प्रणाली",
+    "hero-subtitle": "एआई तकनीक से मौसम, सरकारी योजना आ खेती के समस्या के हल",
+    "get-started": "शुरू करीं",
+    "voice-text-feature": "आवाज आ लिखल सवाल",
+    "voice-text-desc": "अपना भाषा में सवाल पूछीं आ एआई से जवाब पाई",
+    "image-feature": "फोटू जाँच",
+    "image-desc": "फसल के फोटू अपलोड करीं, बीमारी पहचान आ इलाज के सलाह पाई",
+    "weather-feature": "मौसम जानकारी",
+    "weather-desc": "सही मौसम अंदाज आ खेती के सलाह पाई",
+
+    // Voice/Text Query section
+    "voice-text-title": "आवाज आ लिखल सवाल",
+    "voice-text-subtitle": "खेती से जुड़ल सवाल पूछीं आ अपना भाषा में सलाह पाई",
+    "select-language": "भाषा चुनल जाव:",
+    "type-question": "आपन सवाल लिखीं:",
+    "question-placeholder": "उदाहरण: धान के पत्ते पर भूरा दाग होखला पर इलाज का करीं?",
+    "submit-question": "सवाल भेजीं",
+    "ai-response": "एआई जवाब:",
+    "response-placeholder": "जवाब इहाँ देखाई...",
+
+    // Image Query section
+    "image-title": "फोटू सवाल",
+    "image-subtitle": "आपन फसल या माटी के फोटू अपलोड करीं",
+    "upload-image": "फोटू अपलोड करीं:",
+    "analyze-image": "फोटू जाँच करीं",
+    "analysis-result": "जाँच परिणाम:",
+    "analysis-placeholder": "परिणाम इहाँ देखाई...",
+
+    // Weather section
+    "weather-title": "मौसम आ जगह",
+    "weather-subtitle": "आपन जगह के लाइव मौसम जानकारी",
+    "enter-location": "आपन जगह लिखीं:",
+    "location-placeholder": "उदाहरण: पटना, बिहार",
+    "current-weather": "अबही के मौसम",
+    "temperature": "तापमान:",
+    "humidity": "नमी:",
+    "conditions": "स्थिति:",
+    "rain-forecast": "बरखा के अंदाज",
+    "next-24h": "अगिला 24 घंटा:",
+    "chance": "संभावना",
+    "expected": "उम्मीद:",
+    "irrigation-time": "पानी देवे के सबले अच्छा समय:",
+    "advisory": "सलाह",
+    "get-weather": "मौसम जानकारी पाई",
+
+    // Schemes section
+    "schemes-title": "सरकारी योजना",
+    "schemes-subtitle": "किसान लोग खातिर सरकारी योजना के जानकारी",
+    "pm-kisan": "पीएम-किसान योजना",
+    "pm-kisan-desc": "किसान परिवार के सालाना ₹6,000 आर्थिक मदद",
+    "learn-more": "आगू जानल जाव",
+    "nmsa": "राष्ट्र्रीय टिकाऊ खेती मिशन",
+    "nmsa-desc": "टिकाऊ खेती के बढ़ावा देवे वाला योजना",
+    "pmfby": "प्रधानमंत्री फसल बीमा योजना",
+    "pmfby-desc": "प्राकृतिक आपदा, कीड़ा आ बीमारी से फसल बीमा",
+
+    // Contact section
+    "contact-title": "हमरा से संपर्क करीं",
+    "contact-subtitle": "खेती विशेषज्ञ लोग से संपर्क करीं",
+    "contact-info": "संपर्क जानकारी",
+    "ministry-address": "कृषि मंत्रालय, केरल",
+    "regional-offices": "क्षेत्रीय दफ्तर",
+    "send-message": "हमरा लगे संदेश भेजीं",
+    "your-name": "राउर नाम:",
+    "name-placeholder": "राउर नाम लिखीं",
+    "email-address": "ईमेल पता:",
+    "email-placeholder": "राउर ईमेल लिखीं",
+    "message": "संदेश:",
+    "message-placeholder": "राउर संदेश लिखीं",
+    "send-message-btn": "संदेश भेजीं",
+
+    // Footer
+    "copyright": "© 2025 फार्मअसिस्ट - एआई आधारित किसान मदद आ सलाह प्रणाली",
+    "footer-desc": "दूर-दराज इलाका में किसान खातिर भी काम करी",
+
+    // Offline message
+    "offline-message": "रउआ अबही ऑफलाइन बानी"
+  },
+   hindi:{
+    // Navigation
+    "site-title": "फार्मअसिस्ट",
+    "home": "मुख्य पृष्ठ",
+    "voice-text": "आवाज़/पाठ प्रश्न",
+    "image": "छवि प्रश्न",
+    "weather": "मौसम और स्थान",
+    "schemes": "सरकारी योजनाएँ",
+    "contact": "संपर्क",
+
+    // Home section
+    "hero-title": "एआई-संचालित किसान सहायता प्रणाली",
+    "hero-subtitle": "एआई तकनीक से विशेषज्ञ सलाह, मौसम जानकारी, सरकारी योजनाओं का विवरण और खेती से जुड़ी समस्याओं का समाधान प्राप्त करें",
+    "get-started": "शुरू करें",
+    "voice-text-feature": "आवाज़ और पाठ प्रश्न",
+    "voice-text-desc": "अपनी भाषा में प्रश्न पूछें और एआई से उत्तर पाएं",
+    "image-feature": "छवि विश्लेषण",
+    "image-desc": "फसल की छवि अपलोड करें और बीमारी पहचान व उपचार की सलाह पाएं",
+    "weather-feature": "मौसम जानकारी",
+    "weather-desc": "सटीक मौसम पूर्वानुमान और खेती की सिफारिशें पाएं",
+
+    // Voice/Text Query section
+    "voice-text-title": "आवाज़ और पाठ प्रश्न",
+    "voice-text-subtitle": "खेती से संबंधित कोई भी प्रश्न पूछें और अपनी भाषा में एआई सलाह पाएं",
+    "select-language": "भाषा चुनें:",
+    "type-question": "अपना प्रश्न लिखें:",
+    "question-placeholder": "उदा., धान की पत्तियों पर भूरे धब्बों का इलाज कैसे करें?",
+    "submit-question": "प्रश्न भेजें",
+    "ai-response": "एआई उत्तर:",
+    "response-placeholder": "उत्तर यहाँ दिखेगा...",
+
+    // Image Query section
+    "image-title": "छवि प्रश्न",
+    "image-subtitle": "अपनी फसल या मिट्टी की छवि अपलोड करें",
+    "upload-image": "छवि अपलोड करें:",
+    "analyze-image": "छवि विश्लेषण करें",
+    "analysis-result": "विश्लेषण परिणाम:",
+    "analysis-placeholder": "परिणाम यहाँ दिखेगा...",
+
+    // Weather section
+    "weather-title": "मौसम और स्थान",
+    "weather-subtitle": "अपने स्थान का वास्तविक समय मौसम जानकारी और सलाह पाएं",
+    "enter-location": "अपना स्थान दर्ज करें:",
+    "location-placeholder": "उदा., लखनऊ, उत्तर प्रदेश",
+    "current-weather": "वर्तमान मौसम",
+    "temperature": "तापमान:",
+    "humidity": "नमी:",
+    "conditions": "स्थिति:",
+    "rain-forecast": "वर्षा पूर्वानुमान",
+    "next-24h": "अगले 24 घंटे:",
+    "chance": "संभावना",
+    "expected": "अपेक्षित:",
+    "irrigation-time": "सिंचाई का सर्वोत्तम समय:",
+    "advisory": "सलाह",
+    "get-weather": "मौसम जानकारी प्राप्त करें",
+
+    // Schemes section
+    "schemes-title": "सरकारी योजनाएँ",
+    "schemes-subtitle": "उपलब्ध कृषि योजनाओं की जानकारी",
+    "pm-kisan": "पीएम-किसान योजना",
+    "pm-kisan-desc": "किसान परिवारों को ₹6,000 प्रति वर्ष की आय सहायता",
+    "learn-more": "और जानें",
+    "nmsa": "राष्ट्रीय सतत कृषि मिशन",
+    "nmsa-desc": "सतत कृषि पद्धतियों को बढ़ावा देना",
+    "pmfby": "प्रधानमंत्री फसल बीमा योजना",
+    "pmfby-desc": "प्राकृतिक आपदाओं, कीट और बीमारियों से फसल बीमा",
+
+    // Contact section
+    "contact-title": "संपर्क करें",
+    "contact-subtitle": "सहायता के लिए कृषि विशेषज्ञों से जुड़ें",
+    "contact-info": "संपर्क जानकारी",
+    "ministry-address": "कृषि मंत्रालय, केरल",
+    "regional-offices": "क्षेत्रीय कार्यालय",
+    "send-message": "संदेश भेजें",
+    "your-name": "आपका नाम:",
+    "name-placeholder": "अपना नाम दर्ज करें",
+    "email-address": "ईमेल पता:",
+    "email-placeholder": "अपना ईमेल दर्ज करें",
+    "message": "संदेश:",
+    "message-placeholder": "यहाँ अपना संदेश लिखें",
+    "send-message-btn": "संदेश भेजें",
+
+    // Footer
+    "copyright": "© 2025 फार्मअसिस्ट - एआई आधारित किसान प्रश्न सहायता और सलाह प्रणाली",
+    "footer-desc": "दूरस्थ क्षेत्रों के किसानों की सेवा के लिए ऑनलाइन और ऑफलाइन दोनों तरीकों से तैयार",
+
+    // Offline message
+    "offline-message": "आप अभी ऑफलाइन हैं"
+},
+ telugu: {
+    // Navigation
+    "site-title": "ఫార్మ్‌అసిస్ట్",
+    "home": "హోమ్",
+    "voice-text": "వాయిస్/టెక్స్ట్ ప్రశ్న",
+    "image": "చిత్ర ప్రశ్న",
+    "weather": "వాతావరణం & ప్రదేశం",
+    "schemes": "ప్రభుత్వ పథకాలు",
+    "contact": "సంప్రదించండి",
+
+    // Home section
+"hero-title": "ఎఐ ఆధారిత రైతు సహాయ వ్యవస్థ",
+    "hero-subtitle": "వాతావరణ సమాచారం, ప్రభుత్వ పథకాలు, వ్యవసాయ సమస్యలకు ఎఐ ద్వారా సమాధానాలు పొందండి",
+    "get-started": "ప్రారంభించండి",
+    "voice-text-feature": "వాయిస్ & టెక్స్ట్ ప్రశ్న",
+    "voice-text-desc": "మీ భాషలో ప్రశ్నలు అడగండి మరియు ఎఐ సమాధానాలు పొందండి",
+    "image-feature": "చిత్ర విశ్లేషణ",
+    "image-desc": "పంటల చిత్రాలను అప్‌లోడ్ చేసి వ్యాధి గుర్తింపు & చికిత్స సూచనలు పొందండి",
+    "weather-feature": "వాతావరణ సమాచారం",
+    "weather-desc": "ఖచ్చితమైన వాతావరణ సూచనలు మరియు వ్యవసాయ సిఫార్సులు పొందండి",
+
+    // Voice/Text Query section
+    "voice-text-title": "వాయిస్ & టెక్స్ట్ ప్రశ్న",
+    "voice-text-subtitle": "వ్యవసాయ సంబంధిత ఏ ప్రశ్న అయినా అడగండి మరియు ఎఐ సూచనలు పొందండి",
+    "select-language": "భాష ఎంచుకోండి:",
+    "type-question": "మీ ప్రశ్న టైప్ చేయండి:",
+    "question-placeholder": "ఉదా., వరి ఆకులపై గోధుమ మచ్చలను ఎలా నివారించాలి?",
+    "submit-question": "ప్రశ్న పంపండి",
+    "ai-response": "ఎఐ సమాధానం:",
+    "response-placeholder": "సమాధానం ఇక్కడ కనిపిస్తుంది...",
+
+    // Image Query section
+    "image-title": "చిత్ర ప్రశ్న",
+    "image-subtitle": "మీ పంట లేదా నేల చిత్రాన్ని అప్‌లోడ్ చేయండి",
+    "upload-image": "చిత్రం అప్‌లోడ్ చేయండి:",
+    "analyze-image": "చిత్రం విశ్లేషించండి",
+    "analysis-result": "విశ్లేషణ ఫలితం:",
+    "analysis-placeholder": "ఫలితాలు ఇక్కడ కనిపిస్తాయి...",
+
+    // Weather section
+    "weather-title": "వాతావరణం & ప్రదేశం",
+    "weather-subtitle": "మీ ప్రదేశానికి తక్షణ వాతావరణ సమాచారం మరియు సూచనలు పొందండి",
+    "enter-location": "మీ ప్రదేశాన్ని నమోదు చేయండి:",
+    "location-placeholder": "ఉదా., విజయవాడ, ఆంధ్రప్రదేశ్",
+    "current-weather": "ప్రస్తుత వాతావరణం",
+    "temperature": "ఉష్ణోగ్రత:",
+    "humidity": "ఆర్ద్రత:",
+    "conditions": "స్థితి:",
+    "rain-forecast": "వర్ష సూచన",
+    "next-24h": "తదుపరి 24 గంటలు:",
+    "chance": "అవకాశం",
+    "expected": "అంచనా:",
+    "irrigation-time": "పొలానికి నీరు పెట్టడానికి ఉత్తమ సమయం:",
+    "advisory": "సలహా",
+    "get-weather": "వాతావరణ సమాచారం పొందండి",
+
+    // Schemes section
+    "schemes-title": "ప్రభుత్వ పథకాలు",
+    "schemes-subtitle": "అందుబాటులో ఉన్న ప్రభుత్వ వ్యవసాయ పథకాల గురించి సమాచారం",
+    "pm-kisan": "పీఎం-కిసాన్ పథకం",
+    "pm-kisan-desc": "దేశవ్యాప్తంగా రైతు కుటుంబాలకు సంవత్సరానికి ₹6,000 ఆదాయ సహాయం",
+    "learn-more": "మరింత తెలుసుకోండి",
+    "nmsa": "జాతీయ స్థిరమైన వ్యవసాయ మిషన్",
+    "nmsa-desc": "స్థిరమైన వ్యవసాయ పద్ధతులను ప్రోత్సహించడం",
+    "pmfby": "ప్రధాన మంత్రి పంట బీమా యోజన",
+    "pmfby-desc": "ప్రాకృతిక విపత్తులు, కీటకాలు & వ్యాధుల నుండి పంట బీమా",
+
+    // Contact section
+    "contact-title": "మమ్మల్ని సంప్రదించండి",
+    "contact-subtitle": "వ్యవసాయ నిపుణులను సంప్రదించండి",
+    "contact-info": "సంప్రదింపు సమాచారం",
+    "ministry-address": "వ్యవసాయ మంత్రిత్వ శాఖ, కేరళ",
+    "regional-offices": "ప్రాంతీయ కార్యాలయాలు",
+    "send-message": "సందేశం పంపండి",
+    "your-name": "మీ పేరు:",
+    "name-placeholder": "మీ పేరు నమోదు చేయండి",
+    "email-address": "ఇమెయిల్ చిరునామా:",
+    "email-placeholder": "మీ ఇమెయిల్ నమోదు చేయండి",
+    "message": "సందేశం:",
+    "message-placeholder": "మీ సందేశం ఇక్కడ రాయండి",
+    "send-message-btn": "సందేశం పంపండి",
+
+    // Footer
+    "copyright": "© 2025 ఫార్మ్‌అసిస్ట్ - ఎఐ ఆధారిత రైతు ప్రశ్న సహాయం మరియు సలహా వ్యవస్థ",
+    "footer-desc": "దూర ప్రాంత రైతులకు కూడా ఆన్‌లైన్ మరియు ఆఫ్‌లైన్‌లో పనిచేయడానికి రూపకల్పన చేయబడింది",
+
+    // Offline message
+    "offline-message": "మీరు ప్రస్తుతం ఆఫ్‌లైన్‌లో ఉన్నారు"
+},
+ };
+ // Function to change language
+        function changeLanguage(lang) {
+            // Update all text elements with data-lang-key attribute
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-lang-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-lang-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+            
+            // Update button values
+            document.querySelectorAll('[data-lang-value]').forEach(element => {
+                const key = element.getAttribute('data-lang-value');
+                if (translations[lang] && translations[lang][key]) {
+                    element.value = translations[lang][key];
+                    // For button elements, we need to update textContent, not value
+                    if (element.tagName === 'BUTTON') {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Save language preference to localStorage
+            localStorage.setItem('preferredLanguage', lang);
+        }
+
+        // Backend simulation - API endpoints with multi-language support
+        const backendAPI = {
+            // Text query processing with multi-language support
+            processTextQuery: async (query, language) => {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Sample responses based on query keywords and language
+                const responses = {
+                    english: {
+                        "brown spot": "Brown spot in rice is a fungal disease. Recommended treatment: Apply fungicides containing azoxystrobin or propiconazole. Also ensure proper field drainage and avoid water stagnation.",
+                        "fertilizer": "For wheat crops, recommended fertilizer application: 100-120 kg Nitrogen per hectare, 60 kg Phosphorus per hectare, and 40 kg Potassium per hectare. Apply in split doses for better results.",
+                        "pest": "For common pest issues, consider using neem-based biopesticides as a first line of defense. For severe infestations, consult with local agricultural extension officers for specific pesticide recommendations.",
+                        "default": "Based on your query, I recommend: 1) Ensure proper irrigation scheduling 2) Use certified seeds 3) Implement crop rotation 4) Monitor for pests regularly 5) Test soil nutrients annually. For more specific advice, please provide additional details about your crop and problem."
+                    },
+                    hindi: {
+                        "brown spot": "चावल में ब्राउन स्पॉट एक फंगल रोग है। अनुशंसित उपचार: एजोक्सिस्ट्रोबिन या प्रोपिकोनाज़ोल युक्त कवकनाशी लगाएं। साथ ही उचित खेत जल निकासी सुनिश्चित करें और पानी के ठहराव से बचें।",
+                        "fertilizer": "गेहूं की फसलों के लिए, अनुशंसित उर्वरक अनुप्रयोग: प्रति हेक्टेयर 100-120 किलोग्राम नाइट्रोजन, 60 किलोग्राम फॉस्फोरस और 40 किलोग्राम पोटेशियम। बेहतर परिणामों के लिए इसे विभाजित खुराक में लगाएं।",
+                        "pest": "सामान्य कीट समस्याओं के लिए, विशिष्ट कीटनाशक सिफारिशों के लिए स्थानीय कृषि विस्तार अधिकारियों से परामर्श करें।",
+                        "default": "आपके प्रश्न के आधार पर, मैं अनुशंसा करता हूं: 1) उचित सिंचाई अनुसूची सुनिश्चित करें 2) प्रमाणित बीजों का उपयोग करें 3) फसल चक्रण लागू करें 4) नियमित रूप से कीटों की निगरानी करें 5) मिट्टी के पोषक तत्वों का सालाना परीक्षण करें। अधिक विशिष्ट सलाह के लिए, कृपया अपनी फसल और समस्या के बारे में अतिरिक्त विवरण प्रदान करें।"
+                    },
+                    telugu: {
+                        "brown spot": "వరిలో బ్రౌన్ స్పాట్ ఒక ఫంగల్ రోగం. సిఫారసు చేయబడిన చికిత్స: అజోక్సిస్ట్రోబిన్ లేదా ప్రోపికోనాజోల్ కలిగిన ఫంగిసైడ్లను వర్తింపజేయండి. సరైన ఫీల్డ్ డ్రైనేజీని నిర్ధారించండి మరియు నీటి నిలువను తప్పించుకోండి.",
+                        "fertilizer": "గోధుమ పంటలకు, సిఫారసు చేయబడిన ఎరువు అప్లికేషన్: హెక్టారుకు 100-120 kg నైట్రోజన్, 60 kg భాస్వరం మరియు 40 kg పొటాషియం. మంచి ఫలితాల కోసం స్ప్లిట్ డోస్లలో వర్తింపజేయండి.",
+                        "pest": "సాధారణ పురుగు సమస్యల కోసం, నిర్దిష్ట పురుగుమందు సిఫారసుల కోసం స్థానిక వ్యవసాయ విస్తరణ అధికారులను సంప్రదించండి.",
+                        "default": "మీ ప్రశ్న ఆధారంగా, నేను సిఫారసు చేస్తున్నాను: 1) సరైన నీటిపారుదల షెడ్యూల్ను నిర్ధారించండి 2) ధృవీకరించబడిన విత్తనాలను ఉపయోగించండి 3) పంట భ్రమణాన్ని అమలు చేయండి 4) పురుగుల కోసం నియమితంగా పర్యవేక్షించండి 5) నేల పోషకాలను వార్షికంగా పరీక్షించండి. మరింత నిర్దిష్ట సలహా కోసం, దయచేసి మీ పంట మరియు సమస్య గురించి అదనపు వివరాలను అందించండి."
+                    }
+                    // Add responses for other languages...
+                };
+
+                // Find matching response based on keywords
+                let response = responses[language]?.default || "I'm sorry, I don't have a response for that query in your selected language yet.";
+                const queryLower = query.toLowerCase();
+                
+                if (queryLower.includes("brown spot") || queryLower.includes("rice")) {
+                    response = responses[language]?.["brown spot"] || response;
+                } else if (queryLower.includes("fertilizer") || queryLower.includes("wheat")) {
+                    response = responses[language]?.["fertilizer"] || response;
+                } else if (queryLower.includes("pest") || queryLower.includes("insect")) {
+                    response = responses[language]?.["pest"] || response;
+                }
+                
+                return response;
+            },
+            
+            // Image analysis simulation
+            analyzeCropImage: async (imageData) => {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simulate different responses based on "image content"
+                const randomDiseases = [
+                    "Leaf rust detected. Recommended treatment: Apply fungicide containing tebuconazole. Remove severely infected leaves to prevent spread.",
+                    "Powdery mildew identified. Suggested treatment: Spray sulfur-based fungicide. Improve air circulation around plants.",
+                    "Nutrient deficiency detected (likely nitrogen). Recommended action: Apply balanced fertilizer with higher nitrogen content.",
+                    "Early blight detected. Recommended treatment: Apply chlorothalonil or copper-based fungicides. Practice crop rotation.",
+                    "No significant disease detected. Plants appear healthy. Continue current maintenance practices."
+                ];
+                
+                return randomDiseases[Math.floor(Math.random() * randomDiseases.length)];
+            },
+            
+            // Weather data simulation
+            getWeatherData: async (location) => {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Generate somewhat realistic weather data based on location
+                const baseTemp = location.toLowerCase().includes("north") ? 22 : 
+                                location.toLowerCase().includes("south") ? 28 :
+                                location.toLowerCase().includes("east") ? 26 : 24;
+                
+                const tempVariation = Math.floor(Math.random() * 8) - 2;
+                const temperature = baseTemp + tempVariation;
+                
+                const humidity = 40 + Math.floor(Math.random() * 40);
+                const rainChance = Math.floor(Math.random() * 100);
+                const rainAmount = Math.floor(Math.random() * 20);
+                
+                // Determine conditions based on rain chance
+                let conditions = "Clear";
+                if (rainChance > 70) conditions = "Heavy Rain";
+                else if (rainChance > 40) conditions = "Partly Cloudy";
+                else if (rainChance > 20) conditions = "Cloudy";
+                
+                // Generate advisory based on conditions
+                let advisory = "";
+                if (rainChance > 70) {
+                    advisory = "Heavy rain expected. Postpone fertilizer application. Ensure proper drainage in fields.";
+                } else if (temperature > 35) {
+                    advisory = "High temperature expected. Increase irrigation frequency. Provide shade for sensitive crops.";
+                } else if (rainChance > 40) {
+                    advisory = "Rain expected. Good time for planting. Avoid spraying chemicals before rain.";
+                } else {
+                    advisory = "Good weather conditions for farming activities. Ideal for fertilizer application and planting.";
+                }
+                
+                return {
+                    temperature,
+                    humidity,
+                    rainChance,
+                    rainAmount,
+                    conditions,
+                    advisory
+                };
+            },
+            
+            // Contact form submission
+            submitContactForm: async (formData) => {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1200));
+
+                // Simulate sending email
+ console.log(`Sending email to: ${formData.email}`);
+ console.log(`Email content: ${formData.message}`);
+
+                
+                // In a real application, this would save to a database and send email
+                return {
+                    success: true,
+                    message: "Your message has been received. We will contact you within 24 hours."
+                };
+            }
+        };
+
+        // Frontend functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('.nav-links');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            // Initialize language on page load
+            const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+            document.getElementById('language-selector').value = savedLanguage;
+            changeLanguage(savedLanguage);
+            
+            // Show home section by default
+            document.getElementById('home').classList.add('active');
+            
+            // Handle navigation clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetSectionId = this.getAttribute('data-section');
+                    const targetSection = document.getElementById(targetSectionId);
+                    
+                    // Update active section
+                    sections.forEach(section => section.classList.remove('active'));
+                    targetSection.classList.add('active');
+                    
+                    // Update active nav link
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Close mobile menu if open
+                    nav.classList.remove('active');
+                    
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                });
+            });
+            
+            // Mobile menu toggle
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('active');
+            });
+            
+            // Language change handler
+            document.getElementById('language-selector').addEventListener('change', function() {
+                changeLanguage(this.value);
+            });
+            
+            // Image preview functionality
+            const imageUpload = document.getElementById('image-upload');
+            const previewImage = document.getElementById('preview-image');
+            
+            imageUpload.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Text query submission with language support
+            const submitQueryBtn = document.getElementById('submit-query');
+            const queryTextarea = document.getElementById('query');
+            const aiResponse = document.getElementById('ai-response');
+            const languageSelect = document.getElementById('language-select');
+            
+            submitQueryBtn.addEventListener('click', async function() {
+                const query = queryTextarea.value.trim();
+                const language = languageSelect.value;
+                
+                if (!query) {
+                    showNotification('Please enter a question');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = submitQueryBtn.textContent;
+                submitQueryBtn.innerHTML = '<div class="loading"></div> Processing...';
+                submitQueryBtn.disabled = true;
+                
+                aiResponse.textContent = "Processing your query...";
+                
+                try {
+                    // Call backend API with language parameter
+                    const response = await backendAPI.processTextQuery(query, language);
+                    aiResponse.textContent = response;
+                } catch (error) {
+                    aiResponse.textContent = "Sorry, we're experiencing technical difficulties. Please try again later.";
+                } finally {
+                    // Restore button state
+                    submitQueryBtn.textContent = originalText;
+                    submitQueryBtn.disabled = false;
+                }
+            });
+            
+            // Image analysis
+            const analyzeImageBtn = document.getElementById('analyze-image');
+            const imageAnalysisResult = document.getElementById('image-analysis-result');
+            
+            analyzeImageBtn.addEventListener('click', async function() {
+                const file = imageUpload.files[0];
+                
+                if (!file) {
+                    showNotification('Please upload an image first');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = analyzeImageBtn.textContent;
+                analyzeImageBtn.innerHTML = '<div class="loading"></div> Analyzing...';
+                analyzeImageBtn.disabled = true;
+                
+                imageAnalysisResult.textContent = "Analyzing image...";
+                
+                try {
+                    // Call backend API
+                    const response = await backendAPI.analyzeCropImage(file);
+                    imageAnalysisResult.textContent = response;
+                } catch (error) {
+                    imageAnalysisResult.textContent = "Sorry, we're experiencing technical difficulties. Please try again later.";
+                } finally {
+                    // Restore button state
+                    analyzeImageBtn.textContent = originalText;
+                    analyzeImageBtn.disabled = false;
+                }
+            });
+            
+            // Weather data
+            const getWeatherBtn = document.getElementById('get-weather');
+            
+            getWeatherBtn.addEventListener('click', async function() {
+                const location = document.getElementById('location').value || 'Chennai';
+                
+                // Show loading state
+                const originalText = getWeatherBtn.textContent;
+                getWeatherBtn.innerHTML = '<div class="loading"></div> Fetching...';
+                getWeatherBtn.disabled = true;
+                
+                try {
+                    // Call backend API
+                    const weatherData = await backendAPI.getWeatherData(location);
+                    
+                    // Update UI with weather data
+                    document.getElementById('current-temp').textContent = weatherData.temperature;
+                    document.getElementById('current-humidity').textContent = weatherData.humidity;
+                    document.getElementById('rain-chance').textContent = weatherData.rainChance;
+                    document.getElementById('rain-amount').textContent = weatherData.rainAmount;
+                    document.getElementById('current-conditions').textContent = weatherData.conditions;
+                    document.getElementById('advisory-text').textContent = weatherData.advisory;
+                    
+                    // Set irrigation time based on rain chance
+                    const irrigationTime = weatherData.rainChance > 60 ? 'After rain' : 'Tomorrow morning';
+                    document.getElementById('irrigation-time').textContent = irrigationTime;
+                    
+                } catch (error) {
+                    showNotification("Failed to fetch weather data. Please try again later.");
+                } finally {
+                    // Restore button state
+                    getWeatherBtn.textContent = originalText;
+                    getWeatherBtn.disabled = false;
+                }
+            });
+            
+            // Contact form submission
+            const sendMessageBtn = document.getElementById('send-message');
+            
+            sendMessageBtn.addEventListener('click', async function() {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const message = document.getElementById('message').value.trim();
+                
+                if (!name || !email || !message) {
+                    showNotification('Please fill all fields');
+                    return;
+                }
+                
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showNotification('Please enter a valid email address');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = sendMessageBtn.textContent;
+                sendMessageBtn.innerHTML = '<div class="loading"></div> Sending...';
+                sendMessageBtn.disabled = true;
+                
+                try {
+                    // Call backend API
+                    const formData = { name, email, message };
+                    const result = await backendAPI.submitContactForm(formData);
+                    
+                    showNotification(result.message);
+                    
+                    // Clear form
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('message').value = '';
+                    
+                } catch (error) {
+                    showNotification("Failed to send message. Please try again later.");
+                } finally {
+                    // Restore button state
+                    sendMessageBtn.textContent = originalText;
+                    sendMessageBtn.disabled = false;
+                }
+            });
+            
+            // Voice recording simulation
+            const voiceBtn = document.getElementById('voice-btn');
+            let isRecording = false;
+            
+            voiceBtn.addEventListener('click', function() {
+                if (!isRecording) {
+                    isRecording = true;
+                    voiceBtn.classList.add('listening');
+                    showNotification('Voice recording started... Speak now');
+                    
+                    // Simulate speech recognition
+                    setTimeout(() => {
+                        isRecording = false;
+                        voiceBtn.classList.remove('listening');
+                        showNotification('Voice recording stopped. Processing...');
+                        
+                        // Simulate voice-to-text conversion
+                        setTimeout(function() {
+                            document.getElementById('query').value = "How to treat brown spots on rice leaves?";
+                        }, 1000);
+                    }, 3000);
+                }
+            });
+            
+            // Offline functionality
+            const offlineIndicator = document.getElementById('offlineIndicator');
+            
+            window.addEventListener('online', function() {
+                console.log('You are now online!');
+                offlineIndicator.style.display = 'none';
+                // Here you would typically sync any offline data
+            });
+            
+            window.addEventListener('offline', function() {
+                console.log('You are now offline!');
+                offlineIndicator.style.display = 'block';
+                offlineIndicator.classList.remove('online');
+            });
+            
+            // Check if offline on load
+            if (!navigator.onLine) {
+                offlineIndicator.style.display = 'block';
+                offlineIndicator.classList.remove('online');
+            }
+            
+            // Notification function
+            function showNotification(text) {
+                notificationText.textContent = text;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
